@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="ApplicationName">Play.Stopwatch</string>
+  <color name="backgroundColor">#2D2D2D</color>
+</resources>
