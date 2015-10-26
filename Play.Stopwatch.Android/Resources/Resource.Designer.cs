@@ -9,9 +9,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: global::Android.Runtime.ResourceDesignerAttribute("Play.Stopwatch.Resource", IsApplication=true)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("Play.Stopwatch.Android.Resource", IsApplication=true)]
 
-namespace Play.Stopwatch
+namespace Play.Stopwatch.Android
 {
 	
 	

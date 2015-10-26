@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Play.Stopwatch.Android", "Play.Stopwatch\Play.Stopwatch.Android.csproj", "{FFE2CA8B-7829-44B0-9136-C53EB7DEEF67}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Play.Stopwatch.Android", "Play.Stopwatch.Android\Play.Stopwatch.Android.csproj", "{FFE2CA8B-7829-44B0-9136-C53EB7DEEF67}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Play.Stopwatch.Core", "Play.Stopwatch.Core\Play.Stopwatch.Core.csproj", "{D91C1D22-4105-48FC-84B5-72EF44D79AE9}"
 EndProject

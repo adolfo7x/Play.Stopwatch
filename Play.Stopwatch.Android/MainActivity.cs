@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Reactive;
+using System.Reactive.Linq;
 using Android.App;
-using Android.Widget;
 using Android.OS;
-using Play.Stopwatch.Views;
-using Play.Stopwatch.Core;
+using Android.Widget;
+using Play.Stopwatch.Android.Views;
 
-namespace Play.Stopwatch
+namespace Play.Stopwatch.Android
 {
     [Activity(Label = "Play.Stopwatch", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
@@ -22,7 +23,7 @@ namespace Play.Stopwatch
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-
+            
             SetContentView(Resource.Layout.Main);
 
             _digitalTimer = FindViewById<TextView>(Resource.Id.DigitalTimer);
@@ -32,35 +33,43 @@ namespace Play.Stopwatch
             _stopButton = FindViewById<Button>(Resource.Id.StopButton);
             _resetButton = FindViewById<Button>(Resource.Id.ResetButton);
 
-            _startButton.Click += Start;
-            _stopButton.Click += Stop;
-            _resetButton.Click += Reset;
+            Observable
+                .FromEventPattern<EventArgs>(_startButton, "Click")
+                .Subscribe(evt => Start());
 
-            _stopwatch.TimeChangedEvent += RefreshTimer;
+            Observable
+                .FromEventPattern<EventArgs>(_stopButton, "Click")
+                .Subscribe(evt => Stop());
+
+            Observable
+                .FromEventPattern<EventArgs>(_resetButton, "Click")
+                .Subscribe(evt => Reset());
+            
+            _stopwatch.TimeChanged.Subscribe(OnTimerChange);
         }
 
-        private void Start(object o, EventArgs args)
+        private void Start()
         {
             _stopwatch.Start();
             _stopButton.Enabled = true;
             _startButton.Enabled = false;
         }
 
-        private void Stop(object o, EventArgs args)
+        private void Stop()
         {
             _stopwatch.Stop();
             _stopButton.Enabled = false;
             _startButton.Enabled = true;
         }
 
-        private void Reset(object o, EventArgs args)
+        private void Reset()
         {
             _stopwatch.Reset();
             _stopButton.Enabled = false;
             _startButton.Enabled = true;
         }
 
-        private void RefreshTimer(object stopwatch, TimeSpan elapsedTime)
+        private void OnTimerChange(TimeSpan elapsedTime)
         {
             _stopwatchView.Refresh((int)Math.Floor(elapsedTime.TotalMinutes), elapsedTime.Seconds);
 

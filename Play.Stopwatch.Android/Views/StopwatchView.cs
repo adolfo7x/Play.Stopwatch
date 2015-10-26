@@ -5,7 +5,7 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 
-namespace Play.Stopwatch.Views
+namespace Play.Stopwatch.Android.Views
 {
     [Register("play.stopwatch.views.StopwatchView")] 
     public sealed class StopwatchView : View

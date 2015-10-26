@@ -1,48 +1,35 @@
 ﻿using System;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 
 namespace Play.Stopwatch.Core
 {
     public class Stopwatch
     {
-        public event EventHandler<TimeSpan> TimeChangedEvent;
+        private readonly Subject<TimeSpan> _timeChanged = new Subject<TimeSpan>();
 
-        private bool _isRunning;
-        private DateTime _startTime;
-        private TimeSpan _elapsedTime;
+        private readonly System.Diagnostics.Stopwatch _watch = new System.Diagnostics.Stopwatch();
 
-        public TimeSpan ElapsedTime
-        {
-            get
-            {
-                return _elapsedTime;
-            }
-
-            private set
-            {
-                _elapsedTime = value;
-
-                TimeChangedEvent?.Invoke(this,  _elapsedTime);
-            }
-        }
-
+        public IObservable<TimeSpan> TimeChanged => _timeChanged.AsObservable();
+        
         public void Start()
         {
-            _isRunning = true;
-            _startTime = DateTime.Now;
+            _watch.Start();
 
             StartTimer();
         }
 
         public void Stop()
         {
-            _isRunning = false;
+            _watch.Stop();
         }
 
         public void Reset()
         {
-            _isRunning = false;
-            ElapsedTime = TimeSpan.Zero;
+            _watch.Reset();
+         
+            _timeChanged.OnNext(TimeSpan.Zero);   
         }
 
         async void StartTimer()
@@ -51,19 +38,11 @@ namespace Play.Stopwatch.Core
             {
                 await Task.Delay(50);
 
-                if (!_isRunning)
+                if (!_watch.IsRunning)
                     break;
 
-                UpdateTimespan();
+                _timeChanged.OnNext(TimeSpan.FromMilliseconds(_watch.ElapsedMilliseconds));
             }
-        }
-
-        public void UpdateTimespan()
-        {
-            var now = DateTime.Now;
-
-            ElapsedTime += (now - _startTime);
-            _startTime = now;
         }
     }
 }
