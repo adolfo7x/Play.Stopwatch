@@ -51,15 +51,13 @@ namespace Play.Stopwatch.Android
 
         private void OnStatusChange(StopwatchStatus status)
         {
-            var isStarted = status == StopwatchStatus.Started;
-
-            _stopButton.Enabled = isStarted;
-            _startButton.Enabled = !isStarted;
+            _stopButton.Enabled = (status == StopwatchStatus.Started);
+            _startButton.Enabled = (status == StopwatchStatus.Stopped);
         }
 
         private void OnTimerChange(TimeSpan elapsedTime)
         {
-            _stopwatchView.Refresh((int)Math.Floor(elapsedTime.TotalMinutes), elapsedTime.Seconds);
+            _stopwatchView.Refresh(elapsedTime.Minutes, elapsedTime.Seconds);
 
             _digitalTimer.Text = $"{Math.Floor(elapsedTime.TotalMinutes).ToString("00")}:" +
                                  $"{elapsedTime.Seconds.ToString("00")}." +
