@@ -74,7 +74,8 @@ namespace Play.Stopwatch.Android
             _stopwatchView.Refresh((int)Math.Floor(elapsedTime.TotalMinutes), elapsedTime.Seconds);
 
             _digitalTimer.Text = $"{Math.Floor(elapsedTime.TotalMinutes).ToString("00")}:" +
-                                 $"{elapsedTime.TotalSeconds.ToString("00.000")}";
+                                 $"{elapsedTime.Seconds.ToString("00")}." +
+                                 $"{elapsedTime.Milliseconds.ToString("000")}";
         }
     }
 }
