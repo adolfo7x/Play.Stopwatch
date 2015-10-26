@@ -7,15 +7,18 @@ namespace Play.Stopwatch.Core
 {
     public class Stopwatch
     {
+        public IObservable<TimeSpan> TimeChanged => _timeChanged.AsObservable();
         private readonly Subject<TimeSpan> _timeChanged = new Subject<TimeSpan>();
 
+        public IObservable<StopwatchStatus> StatusChanged => _statusChanged.AsObservable();
+        private readonly Subject<StopwatchStatus> _statusChanged = new Subject<StopwatchStatus>();
+        
         private readonly System.Diagnostics.Stopwatch _watch = new System.Diagnostics.Stopwatch();
-
-        public IObservable<TimeSpan> TimeChanged => _timeChanged.AsObservable();
         
         public void Start()
         {
             _watch.Start();
+            _statusChanged.OnNext(StopwatchStatus.Started);
 
             StartTimer();
         }
@@ -23,12 +26,14 @@ namespace Play.Stopwatch.Core
         public void Stop()
         {
             _watch.Stop();
+            _statusChanged.OnNext(StopwatchStatus.Stopped);
         }
 
         public void Reset()
         {
             _watch.Reset();
-         
+            _statusChanged.OnNext(StopwatchStatus.Stopped);
+
             _timeChanged.OnNext(TimeSpan.Zero);   
         }
 

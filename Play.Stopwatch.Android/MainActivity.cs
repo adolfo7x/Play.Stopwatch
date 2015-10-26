@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Reactive;
 using System.Reactive.Linq;
 using Android.App;
 using Android.OS;
 using Android.Widget;
 using Play.Stopwatch.Android.Views;
+using Play.Stopwatch.Core;
 
 namespace Play.Stopwatch.Android
 {
@@ -23,7 +23,7 @@ namespace Play.Stopwatch.Android
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-            
+
             SetContentView(Resource.Layout.Main);
 
             _digitalTimer = FindViewById<TextView>(Resource.Id.DigitalTimer);
@@ -35,38 +35,26 @@ namespace Play.Stopwatch.Android
 
             Observable
                 .FromEventPattern<EventArgs>(_startButton, "Click")
-                .Subscribe(evt => Start());
+                .Subscribe(evt => _stopwatch.Start());
 
             Observable
                 .FromEventPattern<EventArgs>(_stopButton, "Click")
-                .Subscribe(evt => Stop());
+                .Subscribe(evt => _stopwatch.Stop());
 
             Observable
                 .FromEventPattern<EventArgs>(_resetButton, "Click")
-                .Subscribe(evt => Reset());
-            
+                .Subscribe(evt => _stopwatch.Reset());
+
             _stopwatch.TimeChanged.Subscribe(OnTimerChange);
+            _stopwatch.StatusChanged.Subscribe(OnStatusChange);
         }
 
-        private void Start()
+        private void OnStatusChange(StopwatchStatus status)
         {
-            _stopwatch.Start();
-            _stopButton.Enabled = true;
-            _startButton.Enabled = false;
-        }
+            var isStarted = status == StopwatchStatus.Started;
 
-        private void Stop()
-        {
-            _stopwatch.Stop();
-            _stopButton.Enabled = false;
-            _startButton.Enabled = true;
-        }
-
-        private void Reset()
-        {
-            _stopwatch.Reset();
-            _stopButton.Enabled = false;
-            _startButton.Enabled = true;
+            _stopButton.Enabled = isStarted;
+            _startButton.Enabled = !isStarted;
         }
 
         private void OnTimerChange(TimeSpan elapsedTime)
