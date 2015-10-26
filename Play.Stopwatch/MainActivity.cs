@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Android.App;
 using Android.Widget;
 using Android.OS;
 using Play.Stopwatch.Views;
+using Play.Stopwatch.Core;
 
 namespace Play.Stopwatch
 {
@@ -17,7 +17,7 @@ namespace Play.Stopwatch
         Button _stopButton;
         Button _resetButton;
 
-        private readonly System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
+        private readonly Core.Stopwatch _stopwatch = new Core.Stopwatch();
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -36,7 +36,7 @@ namespace Play.Stopwatch
             _stopButton.Click += Stop;
             _resetButton.Click += Reset;
 
-            _stopButton.Enabled = false;
+            _stopwatch.TimeChangedEvent += RefreshTimer;
         }
 
         private void Start(object o, EventArgs args)
@@ -44,8 +44,6 @@ namespace Play.Stopwatch
             _stopwatch.Start();
             _stopButton.Enabled = true;
             _startButton.Enabled = false;
-
-            Timer();
         }
 
         private void Stop(object o, EventArgs args)
@@ -60,31 +58,14 @@ namespace Play.Stopwatch
             _stopwatch.Reset();
             _stopButton.Enabled = false;
             _startButton.Enabled = true;
-
-            RefreshTimer();
         }
 
-        async void Timer()
+        private void RefreshTimer(object stopwatch, TimeSpan elapsedTime)
         {
-            while (true)
-            {
-                await Task.Delay(50);
+            _stopwatchView.Refresh((int)Math.Floor(elapsedTime.TotalMinutes), elapsedTime.Seconds);
 
-                RefreshTimer();
-
-                if (!_stopwatch.IsRunning) break;
-            }
-        }
-
-        private void RefreshTimer()
-        {
-            var span = TimeSpan.FromMilliseconds(_stopwatch.ElapsedMilliseconds);
-
-            _stopwatchView.Refresh((int)Math.Floor(span.TotalMinutes), span.Seconds);
-
-            _digitalTimer.Text = $"{Math.Floor(span.TotalMinutes).ToString("00")}:" +
-                                 $"{span.Seconds.ToString("00")}." +
-                                 $"{span.Milliseconds.ToString("000")}";
+            _digitalTimer.Text = $"{Math.Floor(elapsedTime.TotalMinutes).ToString("00")}:" +
+                                 $"{elapsedTime.TotalSeconds.ToString("00.000")}";
         }
     }
 }

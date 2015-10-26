@@ -72,6 +72,12 @@
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Play.Stopwatch.Core\Play.Stopwatch.Core.csproj">
+      <Project>{d91c1d22-4105-48fc-84b5-72ef44d79ae9}</Project>
+      <Name>Play.Stopwatch.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
      Other similar extension points exist, see Microsoft.Common.targets.
